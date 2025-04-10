@@ -1,0 +1,32 @@
+services:
+  redis:
+    # image: docker.io/bitnami/redis:7.4
+    image: redis:alpine
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      # - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis_data:/bitnami/redis/data'
+
+  app:
+    build:
+      context: .
+    container_name: rate-limiter
+    ports:
+      - "8080:8080"
+    environment:
+      - REDIS_ADDR=${REDIS_ADDR}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - DEFAULT_IP_LIMIT=${DEFAULT_IP_LIMIT}
+      - DEFAULT_TOKEN_LIMIT=${DEFAULT_TOKEN_LIMIT}
+      - BLOCK_DURATION_SECONDS=${BLOCK_DURATION_SECONDS}
+      - WINDOW_DURATION=${WINDOW_DURATION}
+    depends_on:
+      - redis
+
+volumes:
+  redis_data:
+    driver: local

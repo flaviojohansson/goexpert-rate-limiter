@@ -7,9 +7,8 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"syscall"
-
 	"strconv"
+	"syscall"
 	"time"
 
 	"github.com/flaviojohansson/goexpert-rate-limiter/internal/limiter"
